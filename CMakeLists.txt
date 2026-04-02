@@ -36,6 +36,11 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_TESTS "Build tests (requires Boost)" OFF)
 #option(BUILD_PY_LIB "Build library for Python wrapper" OFF)
 option(BUILD_COVERAGE "Build library for coverage" OFF)
+option(ENABLE_LTO "Enable link-time optimization (IPO/LTO) for release builds" OFF)
+
+if(ENABLE_LTO AND POLICY CMP0069)
+  cmake_policy(SET CMP0069 NEW)
+endif()
 
 #IF (NOT BUILD_PY_LIB)
   add_subdirectory(run)
@@ -78,6 +83,17 @@ IF (MSVC)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE -MT)
 ENDIF (MSVC)
 
+if(ENABLE_LTO)
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT EPANETX_IPO_SUPPORTED OUTPUT EPANETX_IPO_ERROR)
+  if(EPANETX_IPO_SUPPORTED)
+    message(STATUS "IPO/LTO enabled for release epanetx executable")
+    set_target_properties(epanetx PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+  else()
+    message(WARNING "ENABLE_LTO requested but IPO is not supported: ${EPANETX_IPO_ERROR}")
+  endif()
+endif()
+
 # configure file groups
 file(GLOB EPANET_SOURCES RELATIVE ${PROJECT_SOURCE_DIR} src/*.c src/util/*.c)
 file(GLOB EPANET_LIB_ALL RELATIVE ${PROJECT_SOURCE_DIR} src/* src/util/*)
@@ -96,8 +112,14 @@ ENDIF(MSVC AND "${CMAKE_VS_PLATFORM_NAME}" MATCHES "(Win32)")
 
 target_include_directories(epanet2 PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
+# Keep the logical target name `epanet2` for source compatibility,
+# but emit EPANETx-branded library artifacts.
+set_target_properties(epanet2 PROPERTIES
+  OUTPUT_NAME epanetx
+)
+
 install(TARGETS epanet2 DESTINATION .)
-install(TARGETS runepanet DESTINATION .)
+install(TARGETS epanetx DESTINATION .)
 install(FILES ./include/epanet2.h DESTINATION .)
 install(FILES ./include/epanet2_2.h DESTINATION .)
 install(FILES ./include/epanet2_enums.h DESTINATION .)

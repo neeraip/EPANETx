@@ -18,9 +18,9 @@ CD "%COMPILE_PATH_TMP%"
 %CMAKE_PATH% --build . --config Release
 
 MKDIR "%COMPILE_PATH_WIN32%"
-XCOPY "%COMPILE_PATH_TMP%bin\Release\epanet2.dll" "%COMPILE_PATH_WIN32%epanet2.dll*" /y
-XCOPY "%COMPILE_PATH_TMP%bin\Release\runepanet.exe" "%COMPILE_PATH_WIN32%runepanet.exe*" /y
-XCOPY "%COMPILE_PATH_TMP%lib\Release\epanet2.lib" "%COMPILE_PATH_WIN32%epanet2.lib*" /y
+XCOPY "%COMPILE_PATH_TMP%bin\Release\epanetx.dll" "%COMPILE_PATH_WIN32%epanetx.dll*" /y
+XCOPY "%COMPILE_PATH_TMP%bin\Release\epanetx.exe" "%COMPILE_PATH_WIN32%epanetx.exe*" /y
+XCOPY "%COMPILE_PATH_TMP%lib\Release\epanetx.lib" "%COMPILE_PATH_WIN32%epanetx.lib*" /y
 
 CD "%Build_PATH%"
 RMDIR /s /q "%COMPILE_PATH_TMP%"
@@ -33,9 +33,9 @@ CD "%COMPILE_PATH_TMP%"
 %CMAKE_PATH% --build . --config Release
 
 MKDIR "%COMPILE_PATH_WIN64%"
-XCOPY "%COMPILE_PATH_TMP%bin\Release\epanet2.dll" "%COMPILE_PATH_WIN64%epanet2.dll*" /y
-XCOPY "%COMPILE_PATH_TMP%bin\Release\runepanet.exe" "%COMPILE_PATH_WIN64%runepanet.exe*" /y
-XCOPY "%COMPILE_PATH_TMP%lib\Release\epanet2.lib" "%COMPILE_PATH_WIN64%epanet2.lib*" /y
+XCOPY "%COMPILE_PATH_TMP%bin\Release\epanetx.dll" "%COMPILE_PATH_WIN64%epanetx.dll*" /y
+XCOPY "%COMPILE_PATH_TMP%bin\Release\epanetx.exe" "%COMPILE_PATH_WIN64%epanetx.exe*" /y
+XCOPY "%COMPILE_PATH_TMP%lib\Release\epanetx.lib" "%COMPILE_PATH_WIN64%epanetx.lib*" /y
 
 CD "%Build_PATH%"
 RMDIR /s /q "%COMPILE_PATH_TMP%"

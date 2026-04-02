@@ -13,7 +13,7 @@ cmake --build . --config Release
 
 Note: under Windows, the third command should be `cmake .. -A Win32` for a 32-bit build or `cmake .. -A x64` for a 64-bit build when Microsoft Visual Studio is the default compiler.
 
-For Windows the resulting EPANET toolkit library `epanet2.dll` and its command line executable `runepanet.exe` are placed in the `build\bin\Release` directory. The `build\lib\Release` directory will contain an `epanet2.lib` file which is needed to build C/C++ applications using the Windows version of the library. For Linux and Mac OS the EPANET toolkit shared library `libepanet2.so` appears in the `build/lib` directory and the command line executable `runepanet` is in the `build/bin` directory.
+For Windows the resulting EPANETx toolkit library `epanetx.dll` and its command line executable `epanetx.exe` are placed in the `build\bin\Release` directory. The `build\lib\Release` directory will contain an `epanetx.lib` file which is needed to build C/C++ applications using the Windows version of the library. For Linux and Mac OS the EPANETx toolkit shared library (for example `libepanetx.so` or `libepanetx.dylib`) appears in the `build/lib` directory and the command line executable `epanetx` is in the `build/bin` directory.
 
 In addition, two Windows one-click-build scripts are included in the `win_build` directory:
 

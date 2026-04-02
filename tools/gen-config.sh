@@ -19,13 +19,13 @@ unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)     ;&
     Darwin*)    abs_build_path=$1
-                test_cmd="runepanet"
+                test_cmd="epanetx"
                 ;;
 
     MINGW*)     ;&
     MSYS*)      # Remove leading '/c' from file path for nrtest
                 abs_build_path="$( echo "$1" | sed -e 's#/c##' )"
-                test_cmd="runepanet.exe"
+                test_cmd="epanetx.exe"
                 ;;
 
     *)          # Machine unknown
