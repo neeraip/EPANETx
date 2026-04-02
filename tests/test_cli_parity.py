@@ -8,6 +8,9 @@ import sys
 from pathlib import Path
 
 
+SKIP_EXIT_CODE = 77
+
+
 def find_default_baseline(root: Path) -> Path | None:
     candidates = [
         root.parent / "EPANET" / "build" / "bin" / "runepanet",
@@ -66,7 +69,7 @@ def main() -> int:
     baseline_exe = Path(args.baseline_exe).resolve() if args.baseline_exe else find_default_baseline(Path(__file__).resolve().parents[1])
     if baseline_exe is None or not baseline_exe.exists():
         print("SKIP: baseline runepanet executable not found; parity check skipped")
-        return 0
+        return SKIP_EXIT_CODE
 
     if not fixture.exists():
         print(f"FAIL: fixture not found: {fixture}")

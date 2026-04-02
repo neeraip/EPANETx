@@ -87,7 +87,7 @@ mkdir -p "$BUILD_DIR"
 echo "Configuring EPANETx build in $BUILD_DIR..."
 (
   cd "$BUILD_DIR"
-  cmake ..
+  cmake -DCMAKE_BUILD_TYPE=Release ..
 )
 
 echo "Building epanetx (Release)..."

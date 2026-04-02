@@ -91,7 +91,7 @@ echo "Configuring EPANET build..."
 mkdir -p "$BUILD_DIR"
 (
   cd "$BUILD_DIR"
-  cmake ..
+  cmake -DCMAKE_BUILD_TYPE=Release ..
 )
 
 echo "Building runepanet..."

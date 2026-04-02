@@ -86,6 +86,7 @@ if(Python3_Interpreter_FOUND)
             --fixture ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonical_small_loop.inp
             --workdir ${CMAKE_BINARY_DIR}/tests/parity/small)
     set_tests_properties(test_cli_parity_small PROPERTIES
+        SKIP_RETURN_CODE 77
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
     if(EXISTS ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp)
@@ -95,6 +96,7 @@ if(Python3_Interpreter_FOUND)
                 --fixture ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp
                 --workdir ${CMAKE_BINARY_DIR}/tests/parity/large)
         set_tests_properties(test_cli_parity_large PROPERTIES
+            SKIP_RETURN_CODE 77
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
     else()
         message(STATUS "realistic_city_60x60.inp not found; skipping test_cli_parity_large registration")

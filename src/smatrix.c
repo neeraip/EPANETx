@@ -853,7 +853,7 @@ int linsolve(Smatrix *sm, int n)
     int *EPANET_RESTRICT link = sm->link;
     int *EPANET_RESTRICT first = sm->first;
 
-    int istop, istrt, isub, j, k, kfirst, newk, lnzi, colstrt, colstop;
+    int istop, istrt, isub, j, k, kfirst, newk, lnzi, colstrt;
     int *nzp, *lnzp, *nzp_stop;
     double bj, diagj, ljk;
     unsigned long long t_call_start = 0;
