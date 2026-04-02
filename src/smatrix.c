@@ -25,6 +25,9 @@ Version:      2.3
 #include <limits.h>
 
 #include <time.h> //For optional timer macros
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "text.h"
 #include "types.h"
@@ -69,10 +72,22 @@ static unsigned long long linsolve_setup_ns = 0;
 
 static unsigned long long linsolve_now_ns(void)
 {
+#ifdef _WIN32
+    LARGE_INTEGER counter;
+    static LARGE_INTEGER freq = {0};
+
+    if (freq.QuadPart == 0)
+    {
+        QueryPerformanceFrequency(&freq);
+    }
+    QueryPerformanceCounter(&counter);
+    return (unsigned long long)((counter.QuadPart * 1000000000ull) / freq.QuadPart);
+#else
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (unsigned long long)ts.tv_sec * 1000000000ull +
            (unsigned long long)ts.tv_nsec;
+#endif
 }
 
 static void linsolve_timing_report(void)
@@ -828,15 +843,15 @@ int linsolve(Smatrix *sm, int n)
 **--------------------------------------------------------------
 */
 {
-    double *restrict Aii = sm->Aii;
-    double *restrict Aij = sm->Aij;
-    double *restrict B = sm->F;
-    double *restrict temp = sm->temp;
-    int *restrict LNZ = sm->LNZ;
-    int *restrict XLNZ = sm->XLNZ;
-    int *restrict NZSUB = sm->NZSUB;
-    int *restrict link = sm->link;
-    int *restrict first = sm->first;
+    double *EPANET_RESTRICT Aii = sm->Aii;
+    double *EPANET_RESTRICT Aij = sm->Aij;
+    double *EPANET_RESTRICT B = sm->F;
+    double *EPANET_RESTRICT temp = sm->temp;
+    int *EPANET_RESTRICT LNZ = sm->LNZ;
+    int *EPANET_RESTRICT XLNZ = sm->XLNZ;
+    int *EPANET_RESTRICT NZSUB = sm->NZSUB;
+    int *EPANET_RESTRICT link = sm->link;
+    int *EPANET_RESTRICT first = sm->first;
 
     int istop, istrt, isub, j, k, kfirst, newk, lnzi, colstrt, colstop;
     int *nzp, *lnzp, *nzp_stop;

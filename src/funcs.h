@@ -13,6 +13,15 @@
 #ifndef FUNCS_H
 #define FUNCS_H
 
+// Compiler-portable restrict qualifier for hot-path pointer aliasing hints.
+#if defined(_MSC_VER)
+#define EPANET_RESTRICT __restrict
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define EPANET_RESTRICT restrict
+#else
+#define EPANET_RESTRICT
+#endif
+
 // ------- PROJECT.C ------------
 
 void    initpointers(Project *);

@@ -82,7 +82,7 @@ add_test(NAME test_output
 if(Python3_Interpreter_FOUND)
     add_test(NAME test_cli_parity_small
         COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test_cli_parity.py
-            --epanetx-exe ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/epanetx
+            --epanetx-exe $<TARGET_FILE:epanetx>
             --fixture ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonical_small_loop.inp
             --workdir ${CMAKE_BINARY_DIR}/tests/parity/small)
     set_tests_properties(test_cli_parity_small PROPERTIES
@@ -91,7 +91,7 @@ if(Python3_Interpreter_FOUND)
     if(EXISTS ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp)
         add_test(NAME test_cli_parity_large
             COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test_cli_parity.py
-                --epanetx-exe ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/epanetx
+                --epanetx-exe $<TARGET_FILE:epanetx>
                 --fixture ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp
                 --workdir ${CMAKE_BINARY_DIR}/tests/parity/large)
         set_tests_properties(test_cli_parity_large PROPERTIES
