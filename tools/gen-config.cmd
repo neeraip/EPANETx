@@ -15,8 +15,8 @@
 @echo off
 setlocal
 
-:: swmm target created by the cmake build script
-set TEST_CMD=runepanet.exe
+:: target created by the cmake build script
+set TEST_CMD=epanetx.exe
 
 :: remove quotes from path and convert backward to forward slash
 set ABS_BUILD_PATH=%~1

@@ -1,6 +1,10 @@
 # EPANET COMMAND LINE EXECUTABLE
 cmake_minimum_required (VERSION 3.8.0)
 
+if(POLICY CMP0069)
+  cmake_policy(SET CMP0069 NEW)
+endif()
+
 
 # Sets for output directory for executables and libraries.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -24,11 +28,11 @@ include_directories(include)
 source_group("CLI" FILES ${EPANET_CLI_SOURCES})
 
 
-# Creates the EPANET command line executable
-add_executable(runepanet ${EPANET_CLI_SOURCES})
+# Creates the EPANETx command line executable
+add_executable(epanetx ${EPANET_CLI_SOURCES})
 if(NOT WIN32)
-    target_link_libraries(runepanet LINK_PUBLIC epanet2 m)
+  target_link_libraries(epanetx LINK_PUBLIC epanet2 m)
 else(NOT WIN32)
-    target_link_libraries(runepanet LINK_PUBLIC epanet2)
+  target_link_libraries(epanetx LINK_PUBLIC epanet2)
 endif(NOT WIN32)
 

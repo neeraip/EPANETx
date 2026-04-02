@@ -158,6 +158,7 @@ int openhydfile(Project *pr)
 **----------------------------------------------------------------
 */
 {
+    const size_t IO_BUFFER_BYTES = 1u << 20;
     const int Nnodes = pr->network.Nnodes;
     const int Ntanks = pr->network.Ntanks;
     const int Nlinks = pr->network.Nlinks;
@@ -193,6 +194,9 @@ int openhydfile(Project *pr)
         break;
     }
     if (pr->outfile.HydFile == NULL) return 305;
+
+    // Use a larger stdio buffer to reduce write/read call overhead.
+    setvbuf(pr->outfile.HydFile, NULL, _IOFBF, IO_BUFFER_BYTES);
 
     // If a previous hydraulics solution is not being used, then
     // save the current network size parameters to the file.
@@ -243,6 +247,7 @@ int openoutfile(Project *pr)
 **----------------------------------------------------------------
 */
 {
+    const size_t IO_BUFFER_BYTES = 1u << 20;
     int errcode = 0;
 
     // Close output file if already opened
@@ -251,6 +256,9 @@ int openoutfile(Project *pr)
     // Try to open binary output file
     pr->outfile.OutFile = fopen(pr->outfile.OutFname, "w+b");
     if (pr->outfile.OutFile == NULL) return 304;
+
+    // Use a larger stdio buffer to reduce output file write overhead.
+    setvbuf(pr->outfile.OutFile, NULL, _IOFBF, IO_BUFFER_BYTES);
 
     // Save basic network data & energy usage results
     ERRCODE(savenetdata(pr));
@@ -265,6 +273,7 @@ int openoutfile(Project *pr)
         {
             pr->outfile.TmpOutFile = fopen(pr->TmpStatFname, "w+b");
             if (pr->outfile.TmpOutFile == NULL) errcode = 304;
+            else setvbuf(pr->outfile.TmpOutFile, NULL, _IOFBF, IO_BUFFER_BYTES);
         }
         else pr->outfile.TmpOutFile = pr->outfile.OutFile;
     }
@@ -296,6 +305,7 @@ void closeoutfile(Project *pr)
         fclose(pr->outfile.OutFile);
         pr->outfile.OutFile = NULL;
     }
+
 }
 
 void initpointers(Project *pr)

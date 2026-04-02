@@ -243,8 +243,9 @@ void headlosscoeffs(Project *pr)
 **--------------------------------------------------------------
 **   Input:   none
 **   Output:  none
-**   Purpose: computes coefficients P (1 / head loss gradient)
-**            and Y (head loss / gradient) for all links.
+**   Purpose: CPU reference implementation for computing link
+**            coefficients P (1 / head loss gradient) and
+**            Y (head loss / gradient).
 **--------------------------------------------------------------
 */
 {
@@ -252,8 +253,9 @@ void headlosscoeffs(Project *pr)
     Hydraul *hyd = &pr->hydraul;
 
     int k;
+    int nlinks = net->Nlinks;
 
-    for (k = 1; k <= net->Nlinks; k++)
+    for (k = 1; k <= nlinks; k++)
     {
         switch (net->Link[k].Type)
         {
@@ -281,6 +283,7 @@ void headlosscoeffs(Project *pr)
         case PSV:
             if (hyd->LinkSetting[k] == MISSING) valvecoeff(pr, k);
             else hyd->P[k] = 0.0;
+            break;
         }
     }
 }
@@ -335,46 +338,61 @@ void  linkcoeffs(Project *pr)
     Hydraul *hyd = &pr->hydraul;
     Smatrix *sm = &hyd->smatrix;
 
-    int   k, n1, n2;
+    int   k, n1, n2, row1, row2;
+    int   njuncs = net->Njuncs;
+    double pk, qk, yk;
     Slink *link;
 
     // Examine each link of network
     for (k = 1; k <= net->Nlinks; k++)
     {
-        if (hyd->P[k] == 0.0) continue;
+        pk = hyd->P[k];
+        if (pk == 0.0) continue;
         link = &net->Link[k];
         n1 = link->N1;           // Start node of link
         n2 = link->N2;           // End node of link
+        qk = hyd->LinkFlow[k];
+        yk = hyd->Y[k];
 
         // Update nodal flow excess (Xflow)
         // (Flow out of node is (-), flow into node is (+))
-        hyd->Xflow[n1] -= hyd->LinkFlow[k];
-        hyd->Xflow[n2] += hyd->LinkFlow[k];
+        hyd->Xflow[n1] -= qk;
+        hyd->Xflow[n2] += qk;
 
         // Add to off-diagonal coeff. of linear system matrix
-        sm->Aij[sm->Ndx[k]] -= hyd->P[k];
+        sm->Aij[sm->Ndx[k]] -= pk;
 
         // Update linear system coeffs. associated with start node n1
         // ... node n1 is junction
-        if (n1 <= net->Njuncs)
+        if (n1 <= njuncs)
         {
-            sm->Aii[sm->Row[n1]] += hyd->P[k];   // Diagonal coeff.
-            sm->F[sm->Row[n1]] += hyd->Y[k];     // RHS coeff.
+            row1 = sm->Row[n1];
+            sm->Aii[row1] += pk;   // Diagonal coeff.
+            sm->F[row1] += yk;     // RHS coeff.
         }
 
         // ... node n1 is a tank/reservoir
-        else sm->F[sm->Row[n2]] += (hyd->P[k] * hyd->NodeHead[n1]);
+        else
+        {
+            row2 = sm->Row[n2];
+            sm->F[row2] += (pk * hyd->NodeHead[n1]);
+        }
 
         // Update linear system coeffs. associated with end node n2
         // ... node n2 is junction
-        if (n2 <= net->Njuncs)
+        if (n2 <= njuncs)
         {
-            sm->Aii[sm->Row[n2]] += hyd->P[k];   // Diagonal coeff.
-            sm->F[sm->Row[n2]] -= hyd->Y[k];     // RHS coeff.
+            row2 = sm->Row[n2];
+            sm->Aii[row2] += pk;   // Diagonal coeff.
+            sm->F[row2] -= yk;     // RHS coeff.
         }
 
         // ... node n2 is a tank/reservoir
-        else sm->F[sm->Row[n1]] += (hyd->P[k] * hyd->NodeHead[n2]);
+        else
+        {
+            row1 = sm->Row[n1];
+            sm->F[row1] += (pk * hyd->NodeHead[n2]);
+        }
     }
 }
 

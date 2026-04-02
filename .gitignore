@@ -234,3 +234,10 @@ buildprod*/
 
 # git merge
 *.orig
+
+# Build artifacts
+build/
+build-*/
+
+# EPANET temporary files
+en*

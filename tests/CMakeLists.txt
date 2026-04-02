@@ -11,6 +11,8 @@
 # Sets for output directory for executables and libraries.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+find_package(Python3 QUIET COMPONENTS Interpreter)
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "-std=c++11")
 endif(UNIX)
@@ -76,3 +78,27 @@ add_test(NAME test_filemanager
 add_test(NAME test_output
     COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_output
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/outfile/data)
+
+if(Python3_Interpreter_FOUND)
+    add_test(NAME test_cli_parity_small
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test_cli_parity.py
+            --epanetx-exe ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/epanetx
+            --fixture ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonical_small_loop.inp
+            --workdir ${CMAKE_BINARY_DIR}/tests/parity/small)
+    set_tests_properties(test_cli_parity_small PROPERTIES
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+    if(EXISTS ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp)
+        add_test(NAME test_cli_parity_large
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test_cli_parity.py
+                --epanetx-exe ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/epanetx
+                --fixture ${PROJECT_SOURCE_DIR}/benchmarks/networks/realistic_city_60x60.inp
+                --workdir ${CMAKE_BINARY_DIR}/tests/parity/large)
+        set_tests_properties(test_cli_parity_large PROPERTIES
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    else()
+        message(STATUS "realistic_city_60x60.inp not found; skipping test_cli_parity_large registration")
+    endif()
+else()
+    message(STATUS "Python3 interpreter not found; skipping CLI parity test registration")
+endif()

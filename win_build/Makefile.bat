@@ -22,28 +22,28 @@ REG.exe Query %Reg.Qry% > checkOS.tmp
 Find /i "x86" < checkOS.tmp > StringCheck.tmp
 If %ERRORLEVEL% == 1 (
 	CALL "%SDK_PATH%bin\"SetEnv.cmd /x64 /release
-	rem : create epanet2.dll
-	cl -o epanet2.dll epanet.c epanet2.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /link /DLL
-	rem : create runepanet.exe
-	cl -o runepanet.exe epanet.c epanet2.c ..\run\main.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /I ..\src /link
+	rem : create epanetx.dll
+	cl -o epanetx.dll epanet.c epanet2.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /link /DLL /implib:epanetx.lib
+	rem : create epanetx.exe
+	cl -o epanetx.exe epanet.c epanet2.c ..\run\main.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /I ..\src /link
 	md "%Build_PATH%"\64bit
 	move /y "%SRC_PATH%"\*.dll "%Build_PATH%"\64bit
 	move /y "%SRC_PATH%"\*.exe "%Build_PATH%"\64bit
-    move /y "%SRC_PATH%"\epanet2.lib "%Build_PATH%"\64bit
+	move /y "%SRC_PATH%"\epanetx.lib "%Build_PATH%"\64bit
 	rem copy "%H_PATH%"\*.h "%Build_PATH%"\64bit
 )
 
 rem : 32 bit with DEF
 CALL "%SDK_PATH%bin\"SetEnv.cmd /x86 /release
 echo "32 bit with epanet2.def mapping"
-rem : create epanet2.dll
-cl -o epanet2.dll epanet.c epanet2.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /link /DLL /def:..\include\epanet2.def /MAP
-rem : create runepanet.exe
-cl -o runepanet.exe epanet.c epanet2.c ..\run\main.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /I ..\src /link
+rem : create epanetx.dll
+cl -o epanetx.dll epanet.c epanet2.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /link /DLL /def:..\include\epanet2.def /MAP /implib:epanetx.lib
+rem : create epanetx.exe
+cl -o epanetx.exe epanet.c epanet2.c ..\run\main.c hash.c hydraul.c hydcoeffs.c hydstatus.c hydsolver.c inpfile.c input1.c input2.c input3.c mempool.c output.c project.c quality.c qualroute.c qualreact.c report.c rules.c smatrix.c genmmd.c validate.c leakage.c flowbalance.c /O2 /Depanet2_EXPORTS /I ..\include /I ..\run /I ..\src /link
 md "%Build_PATH%"\32bit
 move /y "%SRC_PATH%"\*.dll "%Build_PATH%"\32bit
 move /y "%SRC_PATH%"\*.exe "%Build_PATH%"\32bit
-move /y "%SRC_PATH%"\epanet2.lib "%Build_PATH%"\32bit
+move /y "%SRC_PATH%"\epanetx.lib "%Build_PATH%"\32bit
 
 
 rem : a bit of housekeeping and cleaning

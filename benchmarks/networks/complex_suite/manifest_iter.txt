@@ -1,0 +1,5 @@
+benchmarks/networks/complex_suite/cm_cmd_trace_pressure.inp
+benchmarks/networks/complex_suite/cm_mld_age_faststep.inp
+benchmarks/networks/complex_suite/dw_cmh_chlorine_long.inp
+benchmarks/networks/complex_suite/hw_lpm_none_highloss.inp
+benchmarks/networks/complex_suite/hw_lps_chlorine_dense.inp
